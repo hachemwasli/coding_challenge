@@ -100,7 +100,7 @@ const StartupList = () => {
           />
         </div>
       )}
-      {!isLoading && startups && startupsData}
+      {!isLoading && startupsData}
       <Pagination
         postsPerPage={postsPerPage}
         totalPosts={startups?.length}
