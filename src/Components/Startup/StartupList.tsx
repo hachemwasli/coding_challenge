@@ -1,9 +1,18 @@
 import { Card, CardContent, Skeleton, Typography } from '@mui/material';
-import { Fragment, ReactElement, useEffect, useState } from 'react';
+import {
+  Fragment,
+  ReactElement,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
 import { StartupHttpService } from '../../Http/Startup/Startup.http.service';
+import Pagination from '../Navigation/Pagination';
 const StartupList = () => {
   const [startups, setStartups] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage] = useState(2);
 
   useEffect(() => {
     const startups = async () => {
@@ -16,7 +25,16 @@ const StartupList = () => {
     startups();
   }, []);
 
-  const startupsData = startups?.map((startup: any) => {
+  // Get current posts
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = startups?.slice(indexOfFirstPost, indexOfLastPost);
+
+  // Change page
+  const paginate = (pageNumber: SetStateAction<number>) =>
+    setCurrentPage(pageNumber);
+
+  const startupsData = currentPosts?.map((startup: any) => {
     return (
       <Card
         key={startup.id}
@@ -83,6 +101,11 @@ const StartupList = () => {
         </div>
       )}
       {!isLoading && startups && startupsData}
+      <Pagination
+        postsPerPage={postsPerPage}
+        totalPosts={startups?.length}
+        paginate={paginate}
+      />
     </Fragment>
   );
 };
