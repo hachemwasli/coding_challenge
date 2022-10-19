@@ -10,6 +10,11 @@ export class StartupHttpService {
 
   public static async getStartups(): Promise<any> {
     const response = await axios.get<StartupDTO[]>(`/api/startups`);
-    return response.data;
+    console.log('response', response);
+    const formatted = response.data.map((format) => {
+      return StartupMapper.map(format);
+    });
+    console.log('formatted', formatted);
+    return formatted;
   }
 }
